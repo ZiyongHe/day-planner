@@ -35,27 +35,61 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script>
+
       function renderTimeBlocks(){
-        let table = document.createElement('table')
-        document.querySelector('.container').appendChild(table)
+        
         for (let t = 9; t<=16; t++){
-          let timeBlock = document.createElement('tr')
-          table.appendChild(timeBlock)
-          let time = document.createElement('td')
-          time.setAttribute('class','col-2')
-          time.textContent = 'time'
-          let toDo = document.createElement('td')
-          toDo.setAttribute('class','col-9')
-          toDo.textContent = 'todo'
-          let save = document.createElement('td')
-          save.setAttribute('class','col-1')
+          let timeBlock = document.createElement('div')
+          timeBlock.setAttribute('class','row border-top border-bottom hour')
+          timeBlock.setAttribute('data-hour',t)
+          document.querySelector('.container').appendChild(timeBlock)
+          let time = document.createElement('span')
+          time.setAttribute('class','col-3 align-middle text-center')
+          time.textContent = t
+          let toDo = document.createElement('textarea')
+          toDo.setAttribute('class','col-8 form-control')
+          toDo.setAttribute('rows','2')
+          toDo.value = 'todo'
+          let save = document.createElement('div')
+          save.setAttribute('class','col-1 btn btn-secondary py-4')
+          save.setAttribute('id',t)
           save.textContent = 'save'
           timeBlock.appendChild(time)
           timeBlock.appendChild(toDo)
           timeBlock.appendChild(save)
+
+          toDo.value = localStorage.getItem(t)
+          save.addEventListener('click',function(event){
+              localStorage.setItem(t,toDo.value)
+          })
         }
       }
+
+
+      function colorizing(){
+        let currentHour = new Date().getHours()
+        let hours = document.querySelectorAll('.hour')
+        console.log(hours)
+        for (t of document.querySelectorAll('.hour')){
+            console.log(t)
+            if (t.getAttribute('data-hour') < currentHour){
+              this.setAttribute('class','p-3 mb-2 bg-secondary text-white')
+            } else if (t.getAttribute('data-hour') == currentHour){
+              this.setAttribute('class','p-3 mb-2 bg-success text-white')
+            } else {
+              this.setAttribute('class','p-3 mb-2 bg-white text-dark')
+            }
+          
+        }
+
+      }
+
       renderTimeBlocks()
+      let hours = document.querySelectorAll('.hour')
+        console.log(hours)
+      
+      // colorizing()
+
     </script>
   </body>
 </html>
