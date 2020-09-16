@@ -37,58 +37,67 @@
     <script>
 
       function renderTimeBlocks(){
-        
+
+        //for loop to create rows for time block
+        //each row contain three columes: time, input, and save button        
         for (let t = 9; t<=16; t++){
           let timeBlock = document.createElement('div')
-          timeBlock.setAttribute('class','row border-top border-bottom hour')
-          timeBlock.setAttribute('data-hour',t)
+          timeBlock.setAttribute('class','row border-top border-bottom')
           document.querySelector('.container').appendChild(timeBlock)
+          
           let time = document.createElement('span')
           time.setAttribute('class','col-3 align-middle text-center')
-          time.textContent = t
+          time.textContent = timeFormat(t) 
+          //use a timeFormat function to convert row counter to display time
+          
           let toDo = document.createElement('textarea')
           toDo.setAttribute('class','col-8 form-control')
           toDo.setAttribute('rows','2')
-          toDo.value = 'todo'
+
           let save = document.createElement('div')
           save.setAttribute('class','col-1 btn btn-secondary py-4')
-          save.setAttribute('id',t)
           save.textContent = 'save'
+
           timeBlock.appendChild(time)
           timeBlock.appendChild(toDo)
           timeBlock.appendChild(save)
 
+          //check for localstorage item upon loading webpage
           toDo.value = localStorage.getItem(t)
+
+          //addEventListener for click save response, save to local storage
           save.addEventListener('click',function(event){
               localStorage.setItem(t,toDo.value)
           })
+
+          //time block colorizing
+          let currentHour = new Date().getHours()
+          if (t < currentHour){
+            toDo.classList.add('bg-secondary', 'text-white')
+          } else if (t == currentHour){
+            toDo.classList.add('bg-success','text-white')
+          } else if ( t > currentHour){
+            toDo.classList.add('bg-white','text-white')
+          }
         }
       }
 
-
-      function colorizing(){
-        let currentHour = new Date().getHours()
-        let hours = document.querySelectorAll('.hour')
-        console.log(hours)
-        for (t of document.querySelectorAll('.hour')){
-            console.log(t)
-            if (t.getAttribute('data-hour') < currentHour){
-              this.setAttribute('class','p-3 mb-2 bg-secondary text-white')
-            } else if (t.getAttribute('data-hour') == currentHour){
-              this.setAttribute('class','p-3 mb-2 bg-success text-white')
-            } else {
-              this.setAttribute('class','p-3 mb-2 bg-white text-dark')
-            }
-          
+      //time formatting function to convert counter to display time
+      function timeFormat(t){
+        let time =''
+        if (t<12){
+          time=t.toString()+':00 AM'
+        } else if(t==12){
+          time=t.toString()+':00 PM'
+        } else{
+          time=(t-12).toString()+':00 PM'
         }
-
+        return time
       }
+
 
       renderTimeBlocks()
-      let hours = document.querySelectorAll('.hour')
-        console.log(hours)
-      
-      // colorizing()
+
 
     </script>
   </body>
